@@ -2,7 +2,11 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial, Sphere } from "@react-three/drei";
-import { EffectComposer, Bloom, ChromaticAberration } from "@react-three/postprocessing";
+import {
+  EffectComposer,
+  Bloom,
+  ChromaticAberration,
+} from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { useRef } from "react";
 import * as THREE from "three";
@@ -34,7 +38,15 @@ function MainShape() {
   );
 }
 
-function OrbitingSphere({ position, color, size = 0.3 }: { position: [number, number, number], color: string, size?: number }) {
+function OrbitingSphere({
+  position,
+  color,
+  size = 0.3,
+}: {
+  position: [number, number, number];
+  color: string;
+  size?: number;
+}) {
   const mesh = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -111,12 +123,7 @@ function Particles() {
   return (
     <points ref={particlesRef}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={particleCount}
-          array={positions}
-          itemSize={3}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
         size={0.05}
@@ -138,22 +145,22 @@ export default function GeometricShape() {
         <pointLight position={[-3, -3, -3]} intensity={1.5} color="#00f2ea" />
         <pointLight position={[0, 5, 0]} intensity={1} color="#a78bfa" />
         <directionalLight position={[5, 5, 5]} intensity={0.8} />
-        
+
         <MainShape />
         <FloatingTorus />
         <OrbitingSphere position={[0, 0, 0]} color="#00f2ea" size={0.25} />
         <OrbitingSphere position={[0, 0, 0]} color="#a78bfa" size={0.2} />
         <Particles />
-        
+
         <EffectComposer>
-          <Bloom 
-            intensity={2} 
-            luminanceThreshold={0.1} 
+          <Bloom
+            intensity={2}
+            luminanceThreshold={0.1}
             luminanceSmoothing={0.9}
             blendFunction={BlendFunction.ADD}
           />
-          <ChromaticAberration 
-            offset={[0.002, 0.002] as [number, number]} 
+          <ChromaticAberration
+            offset={[0.002, 0.002] as [number, number]}
             blendFunction={BlendFunction.NORMAL}
           />
         </EffectComposer>
